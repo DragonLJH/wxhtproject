@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <h1 style="text-align: center;">微信管理</h1>
+    <h1 style="text-align: center">微信管理</h1>
     <div>
       <el-collapse accordion v-model="activeName" @change="handleChange">
         <el-collapse-item
@@ -58,6 +58,21 @@
             >
               {{ value }}
             </el-tag>
+
+            <div>
+              <echartsCard :uname="item.username" :chEch="chEch" />
+            </div>
+
+            <div>
+              <el-switch
+                v-model="value"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              >
+              </el-switch>
+              {{ item.username }}
+              <msg v-show="value" :ausername="item.username" />
+            </div>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -67,19 +82,28 @@
 </template>
 
 <script>
+import echartsCard from "@/components/myecharts/echartsCard.vue";
+import msg from "@/components/commom/msg.vue";
+
 export default {
+  components: {
+    echartsCard,
+    msg,
+  },
   data() {
     return {
       data: [{ id: 0, username: "", password: "", domain: "" }],
       wxnumbers: [],
       activeName: "",
       addWX: "",
+      chEch: "",
+      value: false,
     };
   },
   methods: {
     //查询全部账户
     fetchQueryUser() {
-      this.axios.get("http://47.115.29.252:8089/queryUser").then((response) => {
+      this.axios.get("http://localhost:8781/queryUser").then((response) => {
         this.data = response.data;
       });
     },
@@ -87,7 +111,7 @@ export default {
     handleChange(val) {
       console.log("val", val);
       this.axios
-        .get("http://47.115.29.252:8089/queryWx", {
+        .get("http://localhost:8781/queryWx", {
           params: {
             username: val.trim(),
           },
@@ -99,7 +123,9 @@ export default {
             arr.push(val.wxnumber);
           });
           this.wxnumbers = arr;
-          console.log("wxnumber", arr);
+          this.chEch = new Date().getTime().toString();
+          this.value = false;
+          console.log("val", val);
         });
     },
     //删除微信
@@ -107,7 +133,7 @@ export default {
       console.log("activeName", this.activeName);
       console.log("wxnumber", number);
       this.axios
-        .get("http://47.115.29.252:8089/delectWx", {
+        .get("http://localhost:8781/delectWx", {
           params: {
             username: this.activeName,
             wxnumber: number,
@@ -133,7 +159,7 @@ export default {
           this.addWX = "";
         } else {
           this.axios
-            .get("http://47.115.29.252:8089/creatWx", {
+            .get("http://localhost:8781/creatWx", {
               params: {
                 username: this.activeName,
                 wxnumber: this.addWX.trim(),

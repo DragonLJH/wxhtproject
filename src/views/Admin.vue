@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="rv">
-        <router-view />
+        <router-view v-if="isRouterAlive" />
       </div>
     </div>
   </div>
@@ -21,12 +21,31 @@
 <script>
 import adminnav from "@/components/admin/nav";
 export default {
+  //通过控制router-view 的显示与隐藏，来重渲染路由区域，重而达到页面刷新的效果，show -> flase -> show
+  //provide / inject 这对选项需要一起使用，以允许一个祖先组件向其所有子孙后代注入一个依赖，不论组件层次有多深，并在其上下游关系成立的时间里始终生效。
+  provide() {
+    return {
+      reload: this.reload,
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true,
+    };
+  },
   components: { adminnav },
   methods: {
     SIGNOUT() {
       //清空登录缓存，回到登录页面
       sessionStorage.clear();
       this.$router.push("/LRindex");
+    },
+    //通过控制router-view 的显示与隐藏，来重渲染路由区域，重而达到页面刷新的效果，show -> flase -> show
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function () {
+        this.isRouterAlive = true;
+      });
     },
   },
   mounted() {
@@ -42,7 +61,6 @@ export default {
 }
 .Admin > .nav {
   flex: 1;
-  box-shadow: #999 0px 15px 15px;
 }
 
 .Admin > .main {

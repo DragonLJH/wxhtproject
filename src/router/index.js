@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
   console.log(from)
 
   if (to.meta.requireAuth) {
-    if (sessionStorage.getItem('ybusername') === "dragon") {
+    if (sessionStorage.getItem('ybusername') === "admin") {
       next()
     } else {
       next({

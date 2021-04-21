@@ -1,6 +1,7 @@
 <template>
   <div class="add-wx">
     <h1 style="text-align: center;">账户管理</h1>
+    
     <el-table :data="data">
       <el-table-column label="序号" width="70">
         <template slot-scope="scope">
@@ -37,14 +38,14 @@
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
+              >删除<i class="el-icon-delete el-icon--right"></i> </el-button
             ></span
           >
         </template>
       </el-table-column>
     </el-table>
     <div class="addS">
-      <el-button type="text" @click="dialogVisible = true">添加账户</el-button>
+      <el-button type="text" @click="dialogVisible = true">添加账户<i class="el-icon-upload el-icon--right"></i></el-button>
 
       <el-dialog :visible.sync="dialogVisible" center width="100%">
         <div class="addS-main">
@@ -54,14 +55,14 @@
               v-model="username"
               required
               placeholder="请输入账号"
-            ></el-input>
+            ><i slot="suffix" class="el-input__icon el-icon-user"></i></el-input>
           </p>
           <p>
             <el-input
               v-model="password"
               required
               placeholder="请输入密码"
-            ></el-input>
+            ><i slot="suffix" class="el-input__icon el-icon-lock"></i></el-input>
           </p>
           <p>
             <el-button type="primary" @click="addUser" style="width: 100%"
@@ -90,7 +91,7 @@ export default {
       console.log(index, row.username);
       new Promise((resolve, reject) => {
         this.axios
-          .get("http://47.115.29.252:8089/delectUser", {
+          .get("http://localhost:8781/delectUser", {
             params: { username: row.username },
           })
           .then((response) => {
@@ -106,7 +107,7 @@ export default {
         //判断账户是否删除成功，微信删除失败可能是因为该账户上没有存在微信
         if (val) {
           this.axios
-            .get("http://47.115.29.252:8089/delectAllWx", {
+            .get("http://localhost:8781/delectAllWx", {
               params: { username: row.username },
             })
             .then((response) => {
@@ -119,7 +120,7 @@ export default {
         }
       });
       // this.axios
-      //   .get("http://47.115.29.252:8089/delectUser", {
+      //   .get("http://localhost:8781/delectUser", {
       //     params: { username: row.username },
       //   })
       //   .then((response) => {
@@ -131,7 +132,7 @@ export default {
       //     }
       //   });
       // this.axios
-      //   .get("http://47.115.29.252:8089/delectWx", {
+      //   .get("http://localhost:8781/delectWx", {
       //     params: { username: row.username },
       //   })
       //   .then((response) => {
@@ -153,7 +154,7 @@ export default {
       //账户名和密码不能为空
       if (this.username.trim() !== "" && this.password.trim() !== "") {
         this.axios
-          .get("http://47.115.29.252:8089/creatUser", {
+          .get("http://localhost:8781/creatUser", {
             params: {
               username: this.username.trim(),
               password: this.password.trim(),
@@ -178,7 +179,7 @@ export default {
     },
     //查询全部账户
     fetchQueryUser() {
-      this.axios.get("http://47.115.29.252:8089/queryUser").then((response) => {
+      this.axios.get("http://localhost:8781/queryUser").then((response) => {
         this.data = response.data;
       });
     },

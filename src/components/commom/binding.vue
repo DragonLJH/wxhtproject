@@ -52,6 +52,20 @@
           >
             {{ value }}
           </el-tag>
+          <div>
+            <echartsCard :uname="item.username" :chEch="comEch" />
+          </div>
+          <div>
+            <el-switch
+              v-model="value"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch>
+            {{ item.username }}
+            <!-- v-show在一开始还没拿到数据（渲染的数据 <==> item.username）就渲染了，采用v-if让数据渲染完成再进去渲染 -->
+            <msg v-if="value" :ausername="item.username" />
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -59,7 +73,13 @@
 </template>
 
 <script>
+import echartsCard from "@/components/myecharts/echartsCard.vue";
+import msg from "./msg.vue";
 export default {
+  components: {
+    echartsCard,
+    msg,
+  },
   props: {
     item: Object,
   },
@@ -68,6 +88,8 @@ export default {
       wxnumbers: [],
       activeName: "",
       addWX: "",
+      comEch: "",
+      value: false,
     };
   },
   methods: {
@@ -75,7 +97,7 @@ export default {
     handleChange(val) {
       console.log("val", val);
       this.axios
-        .get("http://47.115.29.252:8089/queryWx", {
+        .get("http://localhost:8781/queryWx", {
           params: {
             username: val.trim(),
           },
@@ -87,6 +109,8 @@ export default {
             arr.push(val.wxnumber);
           });
           this.wxnumbers = arr;
+          this.comEch = new Date().getTime().toString();
+          this.value = false;
           console.log("wxnumber", arr);
         });
     },
@@ -95,7 +119,7 @@ export default {
       console.log("activeName", this.activeName);
       console.log("wxnumber", number);
       this.axios
-        .get("http://47.115.29.252:8089/delectWx", {
+        .get("http://localhost:8781/delectWx", {
           params: {
             username: this.activeName,
             wxnumber: number,
@@ -121,7 +145,7 @@ export default {
           this.addWX = "";
         } else {
           this.axios
-            .get("http://47.115.29.252:8089/creatWx", {
+            .get("http://localhost:8781/creatWx", {
               params: {
                 username: this.activeName,
                 wxnumber: this.addWX.trim(),

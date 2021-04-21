@@ -51,7 +51,7 @@ export default {
     changeDM() {
       console.log(this.aDM);
       this.axios
-        .get("http://47.115.29.252:8089/updateUserByAcc", {
+        .get("http://localhost:8781/updateUserByAcc", {
           params: { username: this.item.username, domain: this.aDM },
         })
         .then((response) => {
@@ -70,7 +70,7 @@ export default {
     //查询该账户信息
     fetchQueryUser() {
       this.axios
-        .get("http://47.115.29.252:8089/queryUserByAcc", {
+        .get("http://localhost:8781/queryUserByAcc", {
           params: {
             username: sessionStorage.getItem("ybusername"),
           },

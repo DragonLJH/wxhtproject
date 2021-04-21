@@ -26,7 +26,7 @@ export default {
   methods: {
     LRindex() {
       this.axios
-        .get("http://47.115.29.252:8089/queryUserByAcc", {
+        .get("http://localhost:8781/queryUserByAcc", {
           params: { username: this.uname },
         })
         .then((response) => {
